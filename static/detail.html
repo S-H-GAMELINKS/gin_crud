@@ -1,0 +1,29 @@
+<body>
+    <h2>Detail</h2>
+
+    <p>{{.user.ID}}</p>
+    <p>{{.user.Name}}</p>
+    <p>{{.user.Age}}</p>
+    
+    <form method="post" action="/update/{{.todo.ID}}">
+        <p>Content<input type="text" name="text" size="30" value="{{.todo.Text}}" ></p>
+        <p>Status
+            <select name="status">
+                {{if eq .todo.Status "Not"}}
+                    <option value="Not" selected>Not</option>
+                    <option value="Now">Now</option>
+                    <option value="Done">Done</option>
+                {{else if eq .todo.Status "Now"}}
+                    <option value="Not">Not</option>
+                    <option value="Now" selected>Now</option>
+                    <option value="Done">Done</option>
+                {{else}}
+                    <option value="Not">Not</option>
+                    <option value="Now">Now</option>
+                    <option value="Done" selected>Done</option>
+                {{end}}
+            </select>
+        </p>
+        <p><input type="submit" value="Send"></p>
+    </form>
+</body>
