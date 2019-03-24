@@ -86,6 +86,21 @@ func dbGetAll() {
 	return todos
 }
 
+// DB Get One
+func dbGetOne(id int) Todo {
+	db, err := gorm.Open("sqlite3", "test.sqlite3")
+	
+    if err != nil {
+        panic("Can not Get Data!")
+	}
+	
+	var todo Todo
+	
+    db.First(&todo, id)
+    db.Close()
+    return todo
+}
+
 func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("static/*.html")
