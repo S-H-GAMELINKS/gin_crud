@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strconv"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/mattn/go-sqlite3"
@@ -89,10 +90,70 @@ func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("static/*.html")
 
+	dbInit()
+
 	data := "Hello Go/Gin!"
 
+	// Index
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(200, "index.html", gin.H{"data": data})
+		todos := dbGetAll()
+		c.HTML(200, "index.html", gin.H{"todos": todos})
 	})
+
+	// Create
+	r.POST("/new", func(c *gin.Context) {
+		text := c.PostForm("text")
+		status := c.PostForm("status")
+		dbInsert(text, status)
+		c.Redirect(302, "/")
+	})
+
+    //Detail
+    r.GET("/detail/:id", func(c *gin.Context) {
+        n := c.Param("id")
+        id, err := strconv.Atoi(n)
+        if err != nil {
+            panic(err)
+        }
+        todo := dbGetOne(id)
+        c.HTML(200, "detail.html", gin.H{"todo": todo})
+    })
+
+    //Update
+    r.POST("/update/:id", func(c *gin.Context) {
+        n := c.Param("id")
+        id, err := strconv.Atoi(n)
+        if err != nil {
+            panic("ERROR")
+        }
+        text := c.PostForm("text")
+        status := c.PostForm("status")
+        dbUpdate(id, text, status)
+        c.Redirect(302, "/")
+	})
+	
+    // Delete Chack
+    r.GET("/delete_check/:id", func(c *gin.Context) {
+        n := c.Param("id")
+        id, err := strconv.Atoi(n)
+        if err != nil {
+            panic("ERROR")
+        }
+        todo := dbGetOne(id)
+        c.HTML(200, "delete.html", gin.H{"todo": todo})
+    })
+
+    //Delete
+    r.POST("/delete/:id", func(c *gin.Context) {
+        n := c.Param("id")
+        id, err := strconv.Atoi(n)
+        if err != nil {
+            panic("ERROR")
+        }
+        dbDelete(id)
+        c.Redirect(302, "/")
+
+    })	
+
 	r.Run(":8000")
 }
