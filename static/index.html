@@ -1,6 +1,23 @@
-<html>
-    <body>
-        <h1>Hello Gin!</h1>
-        <h1>{{.data}}</h1>
-    </body>
-</html>
+<body>
+    <h2>Add</h2>
+    <form method="post" action="/new">
+        <p>Content<input type="text" name="text" size="30" placeholder="input your todo..." ></p>
+        <p>Status
+            <select name="status">
+                <option value="Not">Not</option>
+                <option value="Now">Now</option>
+                <option value="Done">Done</option>
+            </select>
+        </p>
+        <p><input type="submit" value="Send"></p>
+    </form>
+    
+    <ul>
+        {{ range .todos }}
+            <li>Content：{{ .Text }}、Status：{{ .Status }}
+                <label><a href="/detail/{{.ID}}">Edit</a></label>
+                <label><a href="/delete_check/{{.ID}}">Detele</a></label>
+            </li>
+        {{end}}
+    </ul>
+</body>
